@@ -1,54 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 4);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
   return (
     <header
-      className={`flex items-center justify-between px-6 py-3 shrink-0 sticky top-0 z-50 transition-all duration-300 border-b ${
-        scrolled
-          ? 'bg-[rgba(3,7,18,0.95)] backdrop-blur-2xl border-[rgba(0,229,255,0.12)] shadow-[0_2px_24px_rgba(0,0,0,0.5)]'
-          : 'bg-[rgba(3,7,18,0.7)] backdrop-blur-xl border-[rgba(0,229,255,0.07)]'
-      }`}
+      className="flex items-center justify-between px-6 shrink-0 z-50 border-b"
+      style={{
+        background: 'rgba(8, 12, 24, 0.95)',
+        backdropFilter: 'blur(20px)',
+        borderColor: 'rgba(255,255,255,0.07)',
+        minHeight: '48px',
+      }}
     >
-      {/* Logo */}
-      <div className="flex items-center gap-2.5">
-        <div className="relative w-8 h-8 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-xl bg-linear-to-br from-[#00e5ff] to-[#3b82f6] opacity-20 blur-md" />
-          <div className="relative w-8 h-8 rounded-xl bg-linear-to-br from-[#00e5ff]/15 to-[#3b82f6]/15 border border-[rgba(0,229,255,0.3)] flex items-center justify-center">
-            <svg style={{width:'16px',height:'16px'}} viewBox="0 0 24 24" fill="none">
-              <path d="M12 3L4 7V12C4 16.55 7.41 20.74 12 22C16.59 20.74 20 16.55 20 12V7L12 3Z"
-                stroke="url(#gh1)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-                fill="url(#gh1fill)" />
-              <defs>
-                <linearGradient id="gh1" x1="4" y1="3" x2="20" y2="22" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#00e5ff" /><stop offset="1" stopColor="#3b82f6" />
-                </linearGradient>
-                <linearGradient id="gh1fill" x1="4" y1="3" x2="20" y2="22" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#00e5ff" stopOpacity="0.12" /><stop offset="1" stopColor="#3b82f6" stopOpacity="0.12" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
+      {/* ── Logo ── */}
+      <div className="flex items-center gap-3">
+        <div
+          className="w-8 h-8 rounded-lg flex items-center justify-center"
+          style={{
+            background: 'linear-gradient(135deg, #6366f1, #818cf8)',
+            boxShadow: '0 0 16px rgba(99,102,241,0.45)',
+          }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+            <path d="M13 2L4.09 12.97H11L10 22L20.91 11.03H14L13 2Z" />
+          </svg>
         </div>
 
-        <div className="flex flex-col leading-none">
-          <span className="text-[17px] font-extrabold tracking-tight shimmer-text">QuickEdit</span>
-          <span className="text-[9px] font-medium text-[#334155] tracking-[1.5px] uppercase">Image Studio</span>
+        <div className="flex items-baseline gap-2">
+          <span className="text-[18px] font-bold text-white tracking-tight">QuickEdit</span>
+          <span className="text-[13px] font-medium" style={{ color: 'rgba(148,163,184,0.65)' }}>
+            Image Studio
+          </span>
         </div>
       </div>
 
-      {/* Badge */}
-      <div className="flex items-center gap-1.5 text-[10px] font-medium text-[#00e5ff]/50 bg-[rgba(0,229,255,0.04)] border border-[rgba(0,229,255,0.1)] px-3 py-1.5 rounded-full">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] animate-pulse" />
-        Powered by ImageKit
+      {/* ── Center: All changes saved ── */}
+      <div
+        className="flex items-center gap-2 text-[13px] font-medium"
+        style={{ color: '#4ade80' }}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+        All changes saved
       </div>
+
+      {/* ── Right: empty placeholder to keep center balanced ── */}
+      <div style={{ width: '160px' }} />
     </header>
   );
 }

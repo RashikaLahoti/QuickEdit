@@ -12,58 +12,86 @@ export default function Upload({ file, onFileChange }) {
   }
 
   return (
-    <div className="glass-card px-3.5 py-3 shrink-0">
-      <p className="section-label mb-2.5">Upload Image</p>
+    <div className="glass-card" style={{ padding: '14px 14px 12px' }}>
+      {/* Section header */}
+      <div className="section-header" style={{ marginBottom: '10px' }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#94a3b8' }}>
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="17 8 12 3 7 8" />
+          <line x1="12" y1="3" x2="12" y2="15" />
+        </svg>
+        Upload Image
+      </div>
 
-      {/* Drop zone — compact height */}
+      {/* Drop zone — compact */}
       <div
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        className={`relative border-2 border-dashed rounded-xl py-3.5 px-4 flex items-center gap-3 cursor-pointer transition-all duration-300 group ${
-          dragging
-            ? 'drag-active'
-            : 'border-[rgba(0,229,255,0.15)] hover:border-[rgba(0,229,255,0.35)] hover:bg-[rgba(0,229,255,0.03)]'
-        }`}
+        className={dragging ? 'drag-active' : ''}
+        style={{
+          border: '2px dashed',
+          borderColor: dragging ? '#22d3ee' : 'rgba(255,255,255,0.1)',
+          borderRadius: '10px',
+          padding: '14px 12px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          cursor: 'pointer',
+          background: dragging ? 'rgba(34,211,238,0.04)' : 'rgba(255,255,255,0.02)',
+          transition: 'all 0.25s',
+        }}
+        onMouseEnter={e => {
+          if (!dragging) {
+            e.currentTarget.style.borderColor = 'rgba(99,102,241,0.35)'
+            e.currentTarget.style.background = 'rgba(99,102,241,0.04)'
+          }
+        }}
+        onMouseLeave={e => {
+          if (!dragging) {
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'
+            e.currentTarget.style.background = 'rgba(255,255,255,0.02)'
+          }
+        }}
       >
         <input
           ref={inputRef}
           id="file-input"
           type="file"
           accept=".jpg,.jpeg,.png,.webp"
-          className="hidden"
+          style={{ display: 'none' }}
           onChange={(e) => onFileChange(e.target.files[0])}
         />
 
         {/* Icon */}
-        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
-          dragging
-            ? 'bg-[rgba(0,229,255,0.15)] shadow-[0_0_14px_rgba(0,229,255,0.2)]'
-            : 'bg-[rgba(0,229,255,0.06)] group-hover:bg-[rgba(0,229,255,0.1)]'
-        }`}>
-          <svg className="w-4.5 h-4.5 text-[#00e5ff]" style={{width:'18px',height:'18px'}} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+        <div style={{
+          width: '38px', height: '38px', borderRadius: '10px', flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)',
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="url(#uploadGrad)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <defs>
+              <linearGradient id="uploadGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#22d3ee" /><stop offset="1" stopColor="#818cf8" />
+              </linearGradient>
+            </defs>
+            <polyline points="16 16 12 12 8 16" />
+            <line x1="12" y1="12" x2="12" y2="21" />
+            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
           </svg>
         </div>
 
         {/* Text */}
-        <div className="min-w-0">
-          <p className="text-xs font-semibold text-[#e2e8f0] leading-tight">
-            {file ? 'Click to replace' : 'Drop or click to upload'}
+        <div style={{ minWidth: 0 }}>
+          <p style={{ fontSize: '12px', fontWeight: 600, color: '#f1f5f9', marginBottom: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {file ? file.name : 'Drag & drop or click to browse'}
           </p>
-          <p className="text-[10px] text-[#475569] mt-0.5">JPG, PNG, WEBP</p>
+          <p style={{ fontSize: '10px', color: '#475569' }}>
+            {file ? `${(file.size / 1024).toFixed(0)} KB` : 'JPG, PNG, WEBP · Max 10MB'}
+          </p>
         </div>
       </div>
-
-      {/* Selected file badge */}
-      {file && (
-        <div className="mt-2 flex items-center gap-2 text-[10px] bg-[rgba(0,229,255,0.05)] border border-[rgba(0,229,255,0.12)] rounded-lg px-3 py-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shrink-0 shadow-[0_0_5px_#00e5ff]" />
-          <span className="text-[#94a3b8] truncate">{file.name}</span>
-          <span className="ml-auto text-[#475569] shrink-0">{(file.size / 1024).toFixed(0)} KB</span>
-        </div>
-      )}
     </div>
   )
 }

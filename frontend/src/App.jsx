@@ -35,40 +35,93 @@ export default function App() {
   } = useImageEditor();
 
   return (
-    /* Lock entire app to viewport — no scroll ever */
-    <div className="h-screen flex flex-col overflow-hidden bg-mesh">
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#0a0e1a' }}>
       <Header />
 
-      {/* ── Editor Grid ── fills remaining height exactly */}
-      <div className="flex-1 min-h-0 grid" style={{ gridTemplateColumns: '340px 1fr' }}>
+      {/* ── Editor row — fills exactly what's left ── */}
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', overflow: 'hidden' }}>
 
-        {/* ── Sidebar ─ fixed height, no overflow ── */}
-        <aside
-          className="flex flex-col gap-2.5 p-3.5 border-r border-[rgba(0,229,255,0.07)] overflow-hidden"
-          style={{ background: 'rgba(3,7,18,0.85)', backdropFilter: 'blur(14px)' }}
-        >
-          <Upload    file={file} onFileChange={handleFileChange} />
-          <Filters   brightness={brightness} contrast={contrast} saturation={saturation} onChange={handleFilterChange} />
-          <Transform rotation={rotation} flipH={flipH} flipV={flipV} onRotate={handleRotate} onFlipH={handleFlipH} onFlipV={handleFlipV} />
-          <Actions
-            file={file}
-            displayUrl={displayUrl}
-            isProcessing={isProcessing}
-            isSaving={isSaving}
-            ikResult={ikResult}
-            onDownload={handleDownload}
-            onSaveToImageKit={handleSaveToImageKit}
-            onReset={handleReset}
-          />
+        {/* ════════════════════════════════════════
+            LEFT SIDEBAR  (no scroll, fixed width)
+            ┌────────────────────────┐
+            │  Upload      flex:0    │
+            ├────────────────────────┤
+            │  Filters     flex:1    │
+            ├────────────┬───────────┤
+            │ Transform  │  Actions  │  flex:0
+            └────────────┴───────────┘
+        ════════════════════════════════════════ */}
+        <aside style={{
+          width: '320px',
+          flexShrink: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',          /* ← no scrollbar ever */
+          borderRight: '1px solid rgba(255,255,255,0.06)',
+          background: 'rgba(10,14,26,0.98)',
+        }}>
 
-          {/* Branding footer */}
-          <div className="mt-auto text-[9px] text-[#1e293b] text-center tracking-widest uppercase">
-            QuickEdit · Image Studio
+          {/* Top stack: Upload + Filters — Filters stretches to fill */}
+          <div style={{
+            flex: 1,
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+            padding: '12px 14px 8px',
+            overflow: 'hidden',
+          }}>
+            <div style={{ flexShrink: 0 }}>
+              <Upload file={file} onFileChange={handleFileChange} />
+            </div>
+            <div style={{ flex: 1, minHeight: 0 }}>
+              <Filters
+                brightness={brightness}
+                contrast={contrast}
+                saturation={saturation}
+                onChange={handleFilterChange}
+              />
+            </div>
+          </div>
+
+          {/* Thin divider */}
+          <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)', margin: '0 14px', flexShrink: 0 }} />
+
+          {/* Bottom row: Transform + Actions */}
+          <div style={{
+            flexShrink: 0,
+            display: 'flex',
+            gap: '8px',
+            padding: '8px 14px 12px',
+          }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <Transform
+                rotation={rotation}
+                flipH={flipH}
+                flipV={flipV}
+                onRotate={handleRotate}
+                onFlipH={handleFlipH}
+                onFlipV={handleFlipV}
+              />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <Actions
+                file={file}
+                displayUrl={displayUrl}
+                isProcessing={isProcessing}
+                isSaving={isSaving}
+                onDownload={handleDownload}
+                onSaveToImageKit={handleSaveToImageKit}
+                onReset={handleReset}
+              />
+            </div>
           </div>
         </aside>
 
-        {/* ── Preview panel ─ fills rest ── */}
-        <Preview file={file} displayUrl={displayUrl} isProcessing={isProcessing} />
+        {/* ── Preview — fills remaining width ── */}
+        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+          <Preview file={file} displayUrl={displayUrl} isProcessing={isProcessing} />
+        </div>
       </div>
 
       <Toast toasts={toasts} />
